@@ -1,7 +1,12 @@
+
 #include "BigInteger.h"
+#include <string>
 #include <vector>
-#include <stdexcept>
+#include <istream>
+#include <ostream>
 #include <sstream>
+#include <stdexcept>
+
 
 BigInteger BigAbs(const BigInteger &in)
 {

@@ -6,10 +6,13 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef _H_BigInteger_
-#define _H_BigInteger_
+#ifndef BIGINTEGER_H
+#define BIGINTEGER_H
 
 #include <string>
+#include <istream>
+#include <ostream>
+
 
 class BigInteger
 {
