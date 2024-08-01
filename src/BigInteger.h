@@ -14,56 +14,8 @@
 #include <ostream>
 
 
-class BigInteger
+class [[ nodiscard ]] BigInteger
 {
-    friend BigInteger BigAbs(const BigInteger &);
-
-    friend BigInteger operator+(long long, const BigInteger &);
-    friend BigInteger operator+(std::string, const BigInteger &);
-
-    friend BigInteger operator-(long long, const BigInteger &);
-    friend BigInteger operator-(std::string, const BigInteger &);
-
-    friend BigInteger operator*(long long, const BigInteger &);
-    friend BigInteger operator*(std::string, const BigInteger &);
-
-    friend BigInteger operator/(long long, const BigInteger &);
-    friend BigInteger operator/(std::string, const BigInteger &);
-
-    friend BigInteger operator%(long long, const BigInteger &);
-    friend BigInteger operator%(std::string, const BigInteger &);
-
-    friend BigInteger operator^(long long, const BigInteger &);
-    friend BigInteger operator^(std::string, const BigInteger &);
-
-    friend bool operator==(long long, const BigInteger &);
-    friend bool operator==(std::string, const BigInteger &);
-
-    friend bool operator!=(long long, const BigInteger &);
-    friend bool operator!=(std::string, const BigInteger &);
-
-    friend bool operator<(long long, const BigInteger &);
-    friend bool operator<(std::string, const BigInteger &);
-
-    friend bool operator>(long long, const BigInteger &);
-    friend bool operator>(std::string, const BigInteger &);
-
-    friend bool operator<=(long long, const BigInteger &);
-    friend bool operator<=(std::string, const BigInteger &);
-
-    friend bool operator>=(long long, const BigInteger &);
-    friend bool operator>=(std::string, const BigInteger &);
-
-    friend std::ostream& operator<<(std::ostream &, const BigInteger &);
-    friend std::istream& operator>>(std::istream &, BigInteger &);
-
-private:
-    char *data;
-    unsigned size;
-    bool sign;
-
-    void reverse(std::string &);
-
 public:
     BigInteger();
     BigInteger(long long);
@@ -160,6 +112,55 @@ public:
     bool operator>=(long long) const;
     bool operator>=(std::string) const;
     bool operator>=(const BigInteger &) const;
+
+    friend BigInteger BigAbs(const BigInteger &);
+
+    friend BigInteger operator+(long long, const BigInteger &);
+    friend BigInteger operator+(std::string, const BigInteger &);
+
+    friend BigInteger operator-(long long, const BigInteger &);
+    friend BigInteger operator-(std::string, const BigInteger &);
+
+    friend BigInteger operator*(long long, const BigInteger &);
+    friend BigInteger operator*(std::string, const BigInteger &);
+
+    friend BigInteger operator/(long long, const BigInteger &);
+    friend BigInteger operator/(std::string, const BigInteger &);
+
+    friend BigInteger operator%(long long, const BigInteger &);
+    friend BigInteger operator%(std::string, const BigInteger &);
+
+    friend BigInteger operator^(long long, const BigInteger &);
+    friend BigInteger operator^(std::string, const BigInteger &);
+
+    friend bool operator==(long long, const BigInteger &);
+    friend bool operator==(std::string, const BigInteger &);
+
+    friend bool operator!=(long long, const BigInteger &);
+    friend bool operator!=(std::string, const BigInteger &);
+
+    friend bool operator<(long long, const BigInteger &);
+    friend bool operator<(std::string, const BigInteger &);
+
+    friend bool operator>(long long, const BigInteger &);
+    friend bool operator>(std::string, const BigInteger &);
+
+    friend bool operator<=(long long, const BigInteger &);
+    friend bool operator<=(std::string, const BigInteger &);
+
+    friend bool operator>=(long long, const BigInteger &);
+    friend bool operator>=(std::string, const BigInteger &);
+
+    friend std::ostream& operator<<(std::ostream &, const BigInteger &);
+    friend std::istream& operator>>(std::istream &, BigInteger &);
+
+private:
+    void reverse(std::string &);
+
+private:
+    char *data;
+    unsigned size;
+    bool sign;
 };
 
 #endif

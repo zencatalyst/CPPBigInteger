@@ -8,168 +8,6 @@
 #include <stdexcept>
 
 
-BigInteger BigAbs(const BigInteger &in)
-{
-    BigInteger out = in;
-    out.sign = false;
-    return out;
-}
-
-BigInteger operator+(long long l, const BigInteger &r)
-{
-    return BigInteger(l) + r;
-}
-
-BigInteger operator+(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) + r;
-}
-
-BigInteger operator-(long long l, const BigInteger &r)
-{
-    return BigInteger(l) - r;
-}
-
-BigInteger operator-(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) - r;
-}
-
-BigInteger operator*(long long l, const BigInteger &r)
-{
-    return BigInteger(l) * r;
-}
-
-BigInteger operator*(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) * r;
-}
-
-BigInteger operator/(long long l, const BigInteger &r)
-{
-    return BigInteger(l) / r;
-}
-
-BigInteger operator/(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) / r;
-}
-
-BigInteger operator%(long long l, const BigInteger &r)
-{
-    return BigInteger(l) % r;
-}
-
-BigInteger operator%(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) % r;
-}
-
-BigInteger operator^(long long l, const BigInteger &r)
-{
-    return BigInteger(l) ^ r;
-}
-
-BigInteger operator^(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) ^ r;
-}
-
-bool operator==(long long l, const BigInteger &r)
-{
-    return BigInteger(l) == r;
-}
-
-bool operator==(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) == r;
-}
-
-bool operator!=(long long l, const BigInteger &r)
-{
-    return BigInteger(l) != r;
-}
-
-bool operator!=(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) != r;
-}
-
-bool operator<(long long l, const BigInteger &r)
-{
-    return BigInteger(l) < r;
-}
-
-bool operator<(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) < r;
-}
-
-bool operator>(long long l, const BigInteger &r)
-{
-    return BigInteger(l) > r;
-}
-
-bool operator>(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) > r;
-}
-
-bool operator<=(long long l, const BigInteger &r)
-{
-    return BigInteger(l) <= r;
-}
-
-bool operator<=(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) <= r;
-}
-
-bool operator>=(long long l, const BigInteger &r)
-{
-    return BigInteger(l) >= r;
-}
-
-bool operator>=(std::string l, const BigInteger &r)
-{
-    return BigInteger(l) >= r;
-}
-
-std::ostream& operator<<(std::ostream &out, const BigInteger &r)
-{
-    std::stringstream output;
-    if(r.sign)
-    {
-        output << "-";
-    }
-    for(unsigned i = 0;i < r.size;i++)
-    {
-        output << r.data[r.size - i - 1];
-    }
-    out << output.str();
-    return out;
-}
-
-std::istream& operator>>(std::istream &in, BigInteger &r)
-{
-    std::string str;
-    in >> str;
-    r = str;
-    return in;
-}
-
-void BigInteger::reverse(std::string &str)
-{
-    int len = str.size();
-    char temp;
-    for(int i = 0; i < len / 2; i++)
-    {
-        temp = str[i];
-        str[i] = str[len - i - 1];
-        str[len - i - 1] = temp;
-    }
-}
-
 BigInteger::BigInteger()
 {
     this->data = NULL;
@@ -1237,4 +1075,166 @@ bool BigInteger::operator>=(std::string r) const
 bool BigInteger::operator>=(const BigInteger &r) const
 {
     return !(*this < r);
+}
+
+void BigInteger::reverse(std::string &str)
+{
+    int len = str.size();
+    char temp;
+    for(int i = 0; i < len / 2; i++)
+    {
+        temp = str[i];
+        str[i] = str[len - i - 1];
+        str[len - i - 1] = temp;
+    }
+}
+
+BigInteger BigAbs(const BigInteger &in)
+{
+    BigInteger out = in;
+    out.sign = false;
+    return out;
+}
+
+BigInteger operator+(long long l, const BigInteger &r)
+{
+    return BigInteger(l) + r;
+}
+
+BigInteger operator+(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) + r;
+}
+
+BigInteger operator-(long long l, const BigInteger &r)
+{
+    return BigInteger(l) - r;
+}
+
+BigInteger operator-(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) - r;
+}
+
+BigInteger operator*(long long l, const BigInteger &r)
+{
+    return BigInteger(l) * r;
+}
+
+BigInteger operator*(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) * r;
+}
+
+BigInteger operator/(long long l, const BigInteger &r)
+{
+    return BigInteger(l) / r;
+}
+
+BigInteger operator/(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) / r;
+}
+
+BigInteger operator%(long long l, const BigInteger &r)
+{
+    return BigInteger(l) % r;
+}
+
+BigInteger operator%(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) % r;
+}
+
+BigInteger operator^(long long l, const BigInteger &r)
+{
+    return BigInteger(l) ^ r;
+}
+
+BigInteger operator^(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) ^ r;
+}
+
+bool operator==(long long l, const BigInteger &r)
+{
+    return BigInteger(l) == r;
+}
+
+bool operator==(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) == r;
+}
+
+bool operator!=(long long l, const BigInteger &r)
+{
+    return BigInteger(l) != r;
+}
+
+bool operator!=(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) != r;
+}
+
+bool operator<(long long l, const BigInteger &r)
+{
+    return BigInteger(l) < r;
+}
+
+bool operator<(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) < r;
+}
+
+bool operator>(long long l, const BigInteger &r)
+{
+    return BigInteger(l) > r;
+}
+
+bool operator>(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) > r;
+}
+
+bool operator<=(long long l, const BigInteger &r)
+{
+    return BigInteger(l) <= r;
+}
+
+bool operator<=(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) <= r;
+}
+
+bool operator>=(long long l, const BigInteger &r)
+{
+    return BigInteger(l) >= r;
+}
+
+bool operator>=(std::string l, const BigInteger &r)
+{
+    return BigInteger(l) >= r;
+}
+
+std::ostream& operator<<(std::ostream &out, const BigInteger &r)
+{
+    std::stringstream output;
+    if(r.sign)
+    {
+        output << "-";
+    }
+    for(unsigned i = 0;i < r.size;i++)
+    {
+        output << r.data[r.size - i - 1];
+    }
+    out << output.str();
+    return out;
+}
+
+std::istream& operator>>(std::istream &in, BigInteger &r)
+{
+    std::string str;
+    in >> str;
+    r = str;
+    return in;
 }
