@@ -6,274 +6,58 @@
 #include <ostream>
 #include <sstream>
 #include <stdexcept>
+#include <cstddef>
 
 
-BigInteger::BigInteger()
+template <std::integral T>
+BigInteger::BigInteger(const T& num)
+: m_value { std::to_string( std::abs( num ) ) },
+  m_sign { std::cmp_less( num, std::uintmax_t { 0 } ) ? true : false }
 {
-    this->data = NULL;
-    this->size = 0;
-    *this = BigInteger(0);
 }
 
-BigInteger::BigInteger(long long in)
+BigInteger::BigInteger(std::string_view num)
 {
-    this->data = NULL;
-    this->size = 0;
-    if(in == 0)
+    if ( num.front() == '+' || num.front() == '-' )
     {
-        *this = "0";
-        return;
+        m_sign = (num.front() == '-') ? true : false;
+        num.remove_prefix(1);
     }
-    std::string temp = "";
-    long long q;
-    bool hasSign = false;
-    if(in < 0)
-    {
-        hasSign = true;
-        in = -in;
-    }
-    while(in)
-    {
-        q = in / 10;
-        temp += (in % 10 + '0');
-        in = q;
-    }
-    if(hasSign)
-    {
-        temp += '-';
-    }
-    reverse(temp);
-    *this = temp;
+
+    const auto is_non_digit { [ ]( const char c )
+                              { return !std::isdigit( c, std::locale::classic( ) ); } };
+
+    if (const auto result { std::ranges::find_if(num, is_non_digit) }; result != std::cend(num))
+        throw std::invalid_argument("Invalid string: contains non-digit characters");
+
+    m_value = num;
 }
 
-BigInteger::BigInteger(std::string in)
+template <std::integral T>
+BigInteger& BigInteger::operator=(const T& num)
 {
-    this->data = NULL;
-    this->size = 0;
-    std::vector<char> v;
-    bool z = true, hasSign = false;
-    unsigned len = in.size(), i, j = 0;
-    if(in[0] == '-' || in[0] == '+')
-    {
-        j = 1;
-        hasSign = (in[0] == '-');
-    }
-    for(i = j; i < len; i++)
-    {
-        if(!isdigit(in[i]))
-        {
-            throw std::invalid_argument("Invalid string number!");
-        }
-        if(in[i] == '0' && z)
-        {
-            continue;
-        }
-        else
-        {
-            v.push_back(in[i]);
-            z = false;
-        }
-    }
-    if(i == len)
-    {
-        if(v.size() == 0 && in[j] == '0')
-        {
-            v.push_back('0');
-            hasSign = false;
-        }
-        if(v.size() > 0)
-        {
-            this->size = v.size();
-            this->data = new char[this->size];
-            if(this->data)
-            {
-                for(i = 0; i < this->size; i++)
-                {
-                    this->data[i] = v[this->size - i - 1];
-                }
-            }
-            this->sign = hasSign;
-        }
-    }
-}
+    m_value = std::to_string( std::abs( num ) );
+    m_sign = std::cmp_less( num, std::uintmax_t { 0 } ) ? true : false;
 
-BigInteger::BigInteger(const BigInteger &in)
-{
-    this->data = NULL;
-    this->size = 0;
-    if(in.data)
-    {
-        this->data = new char[in.size];
-        if(this->data)
-        {
-            this->size = in.size;
-            for(unsigned i = 0; i < this->size; i++)
-            {
-                this->data[i] = in.data[i];
-            }
-            this->sign = in.sign;
-        }
-    }
-}
-
-BigInteger::~BigInteger()
-{
-    if(this->data)
-    {
-        delete[] this->data;
-    }
-    this->data = NULL;
-    this->size = 0;
-}
-
-bool BigInteger::isValid()
-{
-    return !this->data;
-}
-
-unsigned BigInteger::length()
-{
-    return this->size;
-}
-
-std::string BigInteger::toString()
-{
-    std::string temp = "";
-    if(!this->data)
-    {
-        return temp;
-    }
-    if(sign && *this != "0")
-    {
-        temp = "-";
-    }
-    for(unsigned i = 0; i < this->size; i++)
-    {
-        temp += this->data[this->size - i - 1];
-    }
-    return temp;
-}
-
-int BigInteger::operator[](unsigned index) const
-{
-    if(!this->data || index >= this->size)
-    {
-        return -1;
-    }
-    return this->data[index] - '0';
-}
-
-BigInteger BigInteger::operator=(long long r)
-{
-    if(this->data)
-    {
-        delete[] this->data;
-    }
-    this->data = NULL;
-    this->size = 0;
-    std::string temp = "";
-    long long q;
-    bool hasSign = false;
-    if(r < 0)
-    {
-        hasSign = true;
-        r = -r;
-    }
-    while(r)
-    {
-        q = r / 10;
-        temp += (r % 10 + '0');
-        r = q;
-    }
-    if(hasSign)
-    {
-        temp += '-';
-    }
-    reverse(temp);
-    *this = temp;
     return *this;
 }
 
-BigInteger BigInteger::operator=(std::string r)
+BigInteger& BigInteger::operator=(std::string_view num)
 {
-    if(this->data)
+    if ( num.front() == '+' || num.front() == '-' )
     {
-        delete[] this->data;
+        m_sign = (num.front() == '-') ? true : false;
+        num.remove_prefix(1);
     }
-    this->data = NULL;
-    this->size = 0;
-    std::vector<char> v;
-    bool z = true, hasSign = false;
-    unsigned len = r.size(), i, j = 0;
-    if(r[0] == '-' || r[0] == '+')
-    {
-        j = 1;
-        hasSign =(r[0] == '-' ? true : false);
-    }
-    for(i = j; i < len; i++)
-    {
-        if(isdigit(r[i]))
-        {
-            if(r[i] == '0' && z)
-            {
-                continue;
-            }
-            else
-            {
-                v.push_back(r[i]);
-                z = false;
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-    if(i == len)
-    {
-        if(v.size() == 0 && r[j] == '0')
-        {
-            v.push_back('0');
-            hasSign = false;
-        }
-        if(v.size())
-        {
-            this->size = v.size();
-            this->data = new char[this->size];
-            if(this->data)
-            {
-                for(i = 0; i < this->size; i++)
-                {
-                    this->data[i] = v[this->size - i - 1];
-                }
-            }
-            sign = hasSign;
-        }
-    }
-    return *this;
-}
 
-BigInteger BigInteger::operator=(const BigInteger &r)
-{
-    if(this->data)
-    {
-        delete[] this->data;
-    }
-    this->data = NULL;
-    this->size = 0;
-    if(r.data)
-    {
-        this->data = new char[r.size];
-        if(this->data)
-        {
-            this->size = r.size;
-            for(unsigned i = 0; i < this->size; i++)
-            {
-                this->data[i] = r.data[i];
-            }
-            sign = r.sign;
-        }
-    }
+    const auto is_non_digit { [ ]( const char c )
+                              { return !std::isdigit( c, std::locale::classic( ) ); } };
+
+    if (const auto result { std::ranges::find_if(num, is_non_digit) }; result != std::cend(num))
+        throw std::invalid_argument("Invalid string: contains non-digit characters");
+
+    m_value = num;
+
     return *this;
 }
 
@@ -291,16 +75,16 @@ BigInteger BigInteger:: operator+(std::string r) const
 BigInteger BigInteger::operator+(const BigInteger &r) const
 {
     BigInteger temp;
-    if(!this->data || !r.data)
+    if (!this->data || !r.data)
     {
         return temp;
     }
-    if(this->sign && !r.size)
+    if (this->sign && !r.size)
     {
         temp = -*this;
         return r - temp;
     }
-    if(!this->sign && r.sign)
+    if (!this->sign && r.sign)
     {
         temp = -r;
         return *this - temp;
@@ -309,12 +93,12 @@ BigInteger BigInteger::operator+(const BigInteger &r) const
     unsigned minsize = this->size > r.size ? r.size : this->size;
     unsigned c = 0;
     std::vector<char> v;
-    for(unsigned i = 0; i < minsize; i++)
+    for (unsigned i = 0; i < minsize; i++)
     {
         v.push_back(((r.data[i] - '0') + (this->data[i] - '0') + c) % 10 + '0');
         c = ((r.data[i] - '0') +(this->data[i] - '0') + c) / 10;
     }
-    if(this->size == maxsize)
+    if (this->size == maxsize)
     {
         for(unsigned i = minsize; i < maxsize; i++)
         {
@@ -324,18 +108,18 @@ BigInteger BigInteger::operator+(const BigInteger &r) const
     }
     else
     {
-        for(unsigned i = minsize; i < maxsize; i++)
+        for (unsigned i = minsize; i < maxsize; i++)
         {
             v.push_back(((r.data[i] - '0') + c) % 10 + '0');
             c = ((r.data[i] - '0') + c) / 10;
         }
     }
-    if(c)
+    if (c)
     {
         v.push_back(c + '0');
     }
     temp.data = new char[v.size()];
-    if(temp.data)
+    if (temp.data)
     {
         temp.size = v.size();
         for(unsigned i = 0; i < temp.size; i++)
@@ -352,7 +136,8 @@ BigInteger BigInteger::operator+() const
     return *this;
 }
 
-BigInteger BigInteger::operator+=(long long r)
+template <std::integral T>
+BigInteger& BigInteger::operator+=(const T& num)
 {
     *this = *this + r;
     return *this;
@@ -1087,6 +872,31 @@ void BigInteger::reverse(std::string &str)
         str[i] = str[len - i - 1];
         str[len - i - 1] = temp;
     }
+}
+
+unsigned BigInteger::operator[](const std::size_t pos) const
+{
+    return m_value[pos] - '0';
+}
+
+unsigned BigInteger::at(const std::size_t pos) const
+{
+    if (pos >= m_value.size()) throw std::out_of_range { "Index out of range" };
+
+    return (*this)[pos];
+}
+
+std::size_t BigInteger::digit_count() const
+{
+    return m_value.length();
+}
+
+std::string BigInteger::to_string() const
+{
+    std::string result { std::format( "{}{}",
+                                      m_sign == true ? "-" : "" ),
+                                      value };
+    return result;
 }
 
 BigInteger BigAbs(const BigInteger &in)

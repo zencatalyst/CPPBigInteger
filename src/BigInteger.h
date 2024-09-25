@@ -12,26 +12,23 @@
 #include <string>
 #include <istream>
 #include <ostream>
+#include <cstddef>
 
 
 class [[ nodiscard ]] BigInteger
 {
 public:
-    BigInteger();
-    BigInteger(long long);
-    BigInteger(std::string);
-    BigInteger(const BigInteger &);
-    ~BigInteger();
+    BigInteger() = default;
+    BigInteger(const BigInteger& rhs) = default;
+    template <std::integral T>
+    BigInteger(const T& num);
+    BigInteger(std::string_view num);
 
-    bool isValid();
-    unsigned length();
-    std::string toString();
 
-    int operator[](unsigned) const;
-
-    BigInteger operator=(long long);
-    BigInteger operator=(std::string);
-    BigInteger operator=(const BigInteger &);
+    BigInteger& operator=(const BigInteger& rhs) = default;
+    template <std::integral T>
+    BigInteger& operator=(const T& num);
+    BigInteger& operator=(std::string_view num);
 
     BigInteger operator+(long long) const;
     BigInteger operator+(std::string) const;
@@ -113,6 +110,12 @@ public:
     bool operator>=(std::string) const;
     bool operator>=(const BigInteger &) const;
 
+    unsigned operator[](const std::size_t pos) const;
+    unsigned at(const std::size_t pos) const;
+
+    std::size_t digit_count() const;
+    std::string to_string() const;
+
     friend BigInteger BigAbs(const BigInteger &);
 
     friend BigInteger operator+(long long, const BigInteger &);
@@ -158,9 +161,8 @@ private:
     void reverse(std::string &);
 
 private:
-    char *data;
-    unsigned size;
-    bool sign;
+    std::string m_value { "0" };
+    bool m_sign { false };
 };
 
 #endif
